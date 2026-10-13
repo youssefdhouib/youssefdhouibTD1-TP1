@@ -1,0 +1,11 @@
+<section class="overflow-hidden rounded-lg border border-slate-200 bg-white">
+  <header class="flex items-center justify-between gap-3 bg-slate-800 px-4 py-3 text-white">
+    <h4 class="font-semibold">{{ project().name }}</h4>
+    <span class="rounded-full bg-slate-700 px-2.5 py-1 text-xs">
+      {{ tasks().length }} {{ tasks().length === 1 ? 'tâche' : 'tâches' }}
+    </span>
+  </header>
+  <div class="p-4">
+    <app-task-list [tasks]="tasks()" [showAssignee]="false" />
+  </div>
+</section>

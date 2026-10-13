@@ -1,0 +1,40 @@
+@if (tasks().length === 0) {
+  <app-empty-state message="Aucune tâche." />
+} @else {
+  <ul class="space-y-4">
+    @for (task of tasks(); track task.id) {
+      <li class="border-l-4 pl-4"
+          [class.border-amber-500]="task.status === 'En attente'"
+          [class.border-blue-500]="task.status === 'En cours'"
+          [class.border-emerald-500]="task.status === 'Terminé'">
+        <p class="font-medium text-slate-900">{{ task.title }}</p>
+        @if (task.description) {
+          <!-- TruncatePipe limite les descriptions longues à 40 caractères. -->
+          <p class="mt-1 text-sm text-slate-500">
+            {{ task.description | truncate: 40 }}
+          </p>
+        }
+        <div class="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600">
+          <span>Priorité : {{ task.priority }}</span>
+          <span>{{ task.status }}</span>
+          <!-- On vérifie la présence de dueDate avant d'utiliser DatePipe. -->
+          @if (task.dueDate) {
+            <span>
+              Échéance : {{ task.dueDate | date: 'dd/MM/yyyy' }}
+              · {{ task.dueDate | deadline }}
+            </span>
+          } @else {
+            <!-- DeadlinePipe gère aussi la valeur absente de la tâche 9. -->
+            <span>Échéance : {{ task.dueDate | deadline }}</span>
+          }
+        </div>
+        @if (showAssignee()) {
+          <p class="mt-2 text-sm text-slate-500">
+            Assigné à : <span class="font-medium text-slate-700">{{ assigneeName(task.assigneeId) }}</span>
+          </p>
+        }
+      </li>
+    }
+  </ul>
+}
+

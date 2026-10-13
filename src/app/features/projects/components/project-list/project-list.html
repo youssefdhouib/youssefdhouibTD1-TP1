@@ -1,0 +1,35 @@
+<section aria-labelledby="projects-heading">
+  <div class="mb-6 flex flex-wrap items-baseline justify-between gap-2">
+    <h2 id="projects-heading" class="text-2xl font-semibold text-slate-900">Mes projets</h2>
+    <p class="text-sm text-slate-600">{{ filteredProjects().length }} / {{ projects().length }} projets</p>
+  </div>
+  <p aria-live="polite" class="mb-6 text-sm text-blue-900">
+    @if (selectedProject(); as selected) {
+      Projet sélectionné : <strong>{{ selected.name }}</strong>
+    } @else {
+      Sélectionnez un projet pour le mettre en évidence.
+    }
+  </p>
+  <div class="mb-6">
+    <label for="project-search" class="mb-2 block text-sm font-medium text-slate-900">
+      Rechercher un projet
+    </label>
+    <input
+      id="project-search"
+      type="search"
+      placeholder="Rechercher un projet..."
+      [(ngModel)]="searchTerm"
+      class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 focus:border-blue-700 focus:outline-2 focus:outline-blue-700"
+    />
+  </div>
+  <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+    @for (project of filteredProjects(); track project.id) {
+      <app-project-card [project]="project" (projectSelected)="onProjectSelected($event)" />
+    } @empty {
+      <app-empty-state message="Aucun projet ne correspond à votre recherche." />
+    }
+  </div>
+</section>
+
+
+

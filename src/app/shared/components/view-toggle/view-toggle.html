@@ -1,0 +1,26 @@
+<div class="inline-flex rounded-xl bg-slate-200 p-1" role="group" aria-label="Choisir la vue">
+  <button
+    type="button"
+    class="min-h-11 rounded-lg px-5 py-2 text-sm font-semibold transition-colors"
+    [class.bg-white]="activeView() === 'tasks'"
+    [class.text-blue-800]="activeView() === 'tasks'"
+    [class.shadow-sm]="activeView() === 'tasks'"
+    [class.text-slate-600]="activeView() !== 'tasks'"
+    [attr.aria-pressed]="activeView() === 'tasks'"
+    (click)="select('tasks')"
+  >
+    Par tâche
+  </button>
+  <button
+    type="button"
+    class="min-h-11 rounded-lg px-5 py-2 text-sm font-semibold transition-colors"
+    [class.bg-white]="activeView() === 'users'"
+    [class.text-blue-800]="activeView() === 'users'"
+    [class.shadow-sm]="activeView() === 'users'"
+    [class.text-slate-600]="activeView() !== 'users'"
+    [attr.aria-pressed]="activeView() === 'users'"
+    (click)="select('users')"
+  >
+    Par user
+  </button>
+</div>

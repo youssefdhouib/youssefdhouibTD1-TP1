@@ -1,0 +1,70 @@
+<article class="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
+  <div class="p-6">
+    <div class="flex items-start justify-between gap-4">
+      <div class="flex min-w-0 items-start gap-3">
+        <!-- InitialsPipe produit les deux initiales affichées dans l'avatar rond. -->
+        <div
+          class="flex size-12 shrink-0 items-center justify-center rounded-full bg-blue-700 text-sm font-bold text-white"
+          aria-hidden="true"
+        >
+          {{ user().name | initials }}
+        </div>
+
+        <div class="min-w-0">
+          <!-- TitleCasePipe met la première lettre de chaque mot en majuscule. -->
+          <h3 class="truncate text-xl font-semibold text-slate-900">
+            {{ user().name | titlecase }}
+          </h3>
+          <!-- LowerCasePipe affiche toute l'adresse email en minuscules. -->
+          <p class="mt-1 truncate text-sm text-slate-600">
+            {{ user().email | lowercase }}
+          </p>
+          <p class="mt-2 text-sm font-medium text-blue-700">{{ user().role }}</p>
+        </div>
+      </div>
+
+      <span
+        class="shrink-0 rounded-full px-3 py-1 text-xs font-semibold"
+        [class.bg-emerald-100]="user().active"
+        [class.text-emerald-800]="user().active"
+        [class.bg-slate-200]="!user().active"
+        [class.text-slate-700]="!user().active"
+      >
+        {{ user().active ? 'Actif' : 'Inactif' }}
+      </span>
+    </div>
+
+    <div class="mt-6 grid grid-cols-3 gap-3 text-center">
+      <div class="rounded-lg bg-amber-50 p-3">
+        <strong class="block text-xl text-amber-800">{{ pendingCount() }}</strong>
+        <span class="text-xs text-amber-900">À faire</span>
+      </div>
+      <div class="rounded-lg bg-blue-50 p-3">
+        <strong class="block text-xl text-blue-800">{{ inProgressCount() }}</strong>
+        <span class="text-xs text-blue-900">En cours</span>
+      </div>
+      <div class="rounded-lg bg-emerald-50 p-3">
+        <strong class="block text-xl text-emerald-800">{{ completedCount() }}</strong>
+        <span class="text-xs text-emerald-900">Terminées</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-1 space-y-4 border-t border-slate-200 bg-slate-50 p-6">
+    @for (group of projectGroups(); track group.project.id) {
+      <app-user-project-group [project]="group.project" [tasks]="group.tasks" />
+    } @empty {
+      <app-empty-state message="Aucune tâche assignée." />
+    }
+  </div>
+
+  <div class="border-t border-slate-200 p-4">
+    <button
+      type="button"
+      (click)="selectUser()"
+      class="min-h-11 w-full rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700"
+    >
+      Sélectionner
+    </button>
+  </div>
+</article>

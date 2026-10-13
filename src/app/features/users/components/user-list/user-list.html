@@ -1,0 +1,42 @@
+<section aria-labelledby="users-heading">
+  <div class="mb-6 flex flex-wrap items-baseline justify-between gap-2">
+    <h2 id="users-heading" class="text-2xl font-semibold text-slate-900">Utilisateurs</h2>
+    <p class="text-sm text-slate-600">{{ filteredUsers().length }} / {{ users().length }} utilisateurs</p>
+  </div>
+
+  <p aria-live="polite" class="mb-6 text-sm text-blue-900">
+    @if (selectedUser(); as selected) {
+      Utilisateur sélectionné : <strong>{{ selected.name }}</strong>
+    } @else {
+      Sélectionnez un utilisateur pour afficher son nom ici.
+    }
+  </p>
+
+  <div class="mb-6">
+    <label for="user-search" class="mb-2 block text-sm font-medium text-slate-900">
+      Rechercher un utilisateur
+    </label>
+    <input
+      id="user-search"
+      type="search"
+      placeholder="Nom, e-mail ou rôle..."
+      class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 focus:border-blue-700 focus:outline-2 focus:outline-blue-700"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="onSearchTermChange($event)"
+    />
+  </div>
+
+  @if (filteredUsers().length > 0) {
+    <div class="grid gap-6 lg:grid-cols-2">
+      @for (user of filteredUsers(); track user.id) {
+        <app-user-card
+          [user]="user"
+          [projects]="projects()"
+          (userSelected)="onUserSelected($event)"
+        />  
+      }
+    </div>
+  } @else {
+    <app-empty-state message="Aucun utilisateur ne correspond à votre recherche." />
+  }
+</section>

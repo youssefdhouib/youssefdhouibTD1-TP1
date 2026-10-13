@@ -1,0 +1,21 @@
+<main class="min-h-screen bg-slate-100 px-4 py-8 sm:px-8 sm:py-12">
+  <div class="mx-auto max-w-7xl">
+    <header class="mb-10 flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <p class="mb-2 text-sm font-semibold uppercase tracking-widest text-blue-700">Tableau de travail</p>
+        <h1 class="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">TaskFlow</h1>
+        <p class="mt-3 text-slate-600">Vos projets, vos tâches et votre équipe au même endroit.</p>
+      </div>
+      <app-view-toggle
+        [activeView]="activeView()"
+        (viewChange)="activeView.set($event)"
+      />
+    </header>
+
+    @if (activeView() === 'tasks') {
+      <app-project-list />
+    } @else {
+      <app-user-list />
+    }
+  </div>
+</main>
