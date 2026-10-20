@@ -1,4 +1,4 @@
-<article class="flex h-full flex-col rounded-xl bg-white p-6 shadow-sm">
+<article appHighlight="#e0f2fe" class="flex h-full flex-col rounded-xl bg-white p-6 shadow-sm">
   <div class="flex flex-wrap items-start justify-between gap-3">
     <!-- UpperCasePipe : affiche le nom du projet en majuscules. -->
     <h3 class="text-xl font-semibold text-slate-900">
@@ -15,6 +15,18 @@
     </span>
   </div>
   <p class="mt-3 text-sm leading-6 text-slate-600">{{ project().description }}</p>
+    <!-- Affiche un message selon le nombre de tâches et leur avancement. -->
+  <p class="mt-3 text-sm font-medium text-slate-700">
+    @if (project().tasks.length === 0) {
+      Aucune tâche pour le moment
+    } @else if (completionRate() === 1) {
+      Projet terminé
+    } @else if (completionRate() > 0) {
+      En progression
+    } @else {
+      Pas encore démarré
+    }
+</p>
   <div class="mt-4 space-y-2 text-sm text-slate-600">
     <p>
       <strong>Date de début :</strong>
@@ -41,6 +53,20 @@
         {{ averageTaskCost() | number: '1.0-0' }} TND
       </p>
     }
+  </div>
+
+  <!-- NgStyle définit la largeur en pourcentage et la couleur de progression. -->
+  <div class="mt-4 w-full bg-gray-200 rounded-full h-2"
+       role="progressbar"
+       [attr.aria-label]="'Avancement de ' + project().name"
+       aria-valuemin="0" aria-valuemax="100"
+       [attr.aria-valuenow]="completionRate() * 100">
+    <div class="h-2 rounded-full"
+         [ngStyle]="{
+           'width.%': completionRate() * 100,
+           'background-color': barColor
+         }">
+    </div>
   </div>
 
   <div class="mt-4 flex flex-wrap gap-2">

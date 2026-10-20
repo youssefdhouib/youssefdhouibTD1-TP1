@@ -3,6 +3,7 @@ import {
   DatePipe,
   DecimalPipe,
   KeyValuePipe,
+  NgStyle,
   PercentPipe,
   SlicePipe,
   UpperCasePipe,
@@ -10,6 +11,7 @@ import {
 import { Component, computed, input, output } from '@angular/core';
 import type { Project } from '../../models/project.model';
 import { TaskList } from '../task-list/task-list';
+import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
 
 @Component({
   selector: 'app-project-card',
@@ -25,6 +27,8 @@ import { TaskList } from '../task-list/task-list';
     DecimalPipe,
     SlicePipe,
     KeyValuePipe,
+    NgStyle,
+    HighlightDirective,
   ],
   templateUrl: './project-card.html',
   host: { class: 'block h-full' },
@@ -46,6 +50,18 @@ export class ProjectCard {
     const completedTasks = tasks.filter(task => task.status === 'Terminé').length;
     return completedTasks / tasks.length;
   });
+
+  // L'accesseur choisit la couleur de la barre à partir du pourcentage réel.
+  get barColor(): string {
+    const percentage = this.completionRate() * 100;
+    if (percentage < 34) {
+      return '#ef4444';
+    }
+    if (percentage <= 66) {
+      return '#f59e0b';
+    }
+    return '#22c55e';
+  }
 
   // Calcule le coût moyen d'une tâche à partir du budget du projet.
   readonly averageTaskCost = computed(() => {

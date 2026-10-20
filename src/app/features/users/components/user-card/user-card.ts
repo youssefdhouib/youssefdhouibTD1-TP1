@@ -1,4 +1,4 @@
-import { LowerCasePipe, TitleCasePipe } from '@angular/common';
+import { LowerCasePipe, NgClass, NgStyle, TitleCasePipe } from '@angular/common';
 import { Component, computed, input, output } from '@angular/core';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import type { Project } from '../../../projects/models/project.model';
@@ -6,12 +6,13 @@ import type { Task } from '../../../projects/models/task.model';
 import type { User } from '../../models/user.model';
 import { UserProjectGroup } from '../user-project-group/user-project-group';
 import { InitialsPipe } from '../../../../shared/pipes/initials-pipe';
+import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
 
 @Component({
   selector: 'app-user-card',
   standalone: true,
   // Pipes intégrés utilisés pour formater le nom et l'adresse email.
-  imports: [UserProjectGroup, EmptyState, TitleCasePipe, LowerCasePipe, InitialsPipe],
+  imports: [UserProjectGroup, EmptyState, TitleCasePipe, LowerCasePipe, InitialsPipe, NgClass, NgStyle, HighlightDirective],
   styleUrl: './user-card.css',
   templateUrl: './user-card.html',
   host: { class: 'block h-full' },
@@ -20,6 +21,14 @@ export class UserCard {
   readonly user = input.required<User>();
   readonly projects = input.required<Project[]>();
   readonly userSelected = output<User>();
+
+  // Chaque rôle possède sa couleur d'avatar ; le gris sert de valeur de secours.
+  readonly roleColors: Record<string, string> = {
+    'Développeur': '#1d4ed8',
+    'Chef de projet': '#7e22ce',
+    'Testeur': '#047857',
+    'Designer': '#be185d',
+  };
 
   // Flatten all project tasks, then keep only tasks assigned to this user.
   readonly assignedTasks = computed<Task[]>(() =>

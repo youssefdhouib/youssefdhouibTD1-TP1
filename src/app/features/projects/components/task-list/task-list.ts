@@ -1,4 +1,7 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
+import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
+import { OverdueDirective } from '../../../../shared/directives/overdue.directive';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { UserService } from '../../../../core/services/user.service';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
@@ -11,7 +14,7 @@ import type { Task } from '../../models/task.model';
   selector: 'app-task-list',
   standalone: true,
   // DatePipe est importé car TaskList est un composant standalone.
-  imports: [EmptyState, DatePipe, TruncatePipe, DeadlinePipe],
+  imports: [EmptyState, DatePipe, TruncatePipe, DeadlinePipe, NgClass, HighlightDirective, OverdueDirective, TooltipDirective],
   templateUrl: './task-list.html',
 })
 export class TaskList implements OnInit {

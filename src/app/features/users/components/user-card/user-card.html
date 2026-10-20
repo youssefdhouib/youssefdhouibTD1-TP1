@@ -1,10 +1,11 @@
-<article class="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
+<article appHighlight="#e0f2fe" class="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
   <div class="p-6">
     <div class="flex items-start justify-between gap-4">
       <div class="flex min-w-0 items-start gap-3">
         <!-- InitialsPipe produit les deux initiales affichées dans l'avatar rond. -->
         <div
-          class="flex size-12 shrink-0 items-center justify-center rounded-full bg-blue-700 text-sm font-bold text-white"
+          class="flex size-12 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+          [ngStyle]="{ 'background-color': roleColors[user().role] ?? '#475569' }"
           aria-hidden="true"
         >
           {{ user().name | initials }}
@@ -23,12 +24,13 @@
         </div>
       </div>
 
+      <!-- NgClass applique les classes du badge selon user.active. -->
       <span
         class="shrink-0 rounded-full px-3 py-1 text-xs font-semibold"
-        [class.bg-emerald-100]="user().active"
-        [class.text-emerald-800]="user().active"
-        [class.bg-slate-200]="!user().active"
-        [class.text-slate-700]="!user().active"
+        [ngClass]="{
+          'bg-emerald-100 text-emerald-800': user().active,
+          'bg-slate-200 text-slate-700': !user().active
+        }"
       >
         {{ user().active ? 'Actif' : 'Inactif' }}
       </span>

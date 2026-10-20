@@ -17,5 +17,16 @@
     } @else {
       <app-user-list />
     }
+
+    <!-- Exemples supplémentaires : paramètres optionnels d'un pipe et d'une directive. -->
+    <section class="mt-8 rounded-xl bg-white p-6 shadow-sm" aria-labelledby="examples-title">
+      <h2 id="examples-title" class="mb-3 text-lg font-semibold text-slate-900">
+        Exemples simples : pipe et directive
+      </h2>
+      <!-- Sans facteur : 5 × 2. Sans couleur : rouge par défaut. -->
+      <p appColor>5 × 2 = {{ 5 | multiply }}</p>
+      <!-- Avec facteur 3 et couleur choisie. -->
+      <p appColor="blue" class="mt-2">5 × 3 = {{ 5 | multiply: 3 }}</p>
+    </section>
   </div>
 </main>

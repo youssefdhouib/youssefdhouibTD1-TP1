@@ -38,3 +38,4 @@ export class DeadlinePipe implements PipeTransform {
     return `En retard de ${lateDays} jour${lateDays > 1 ? 's' : ''}`;
   }
 }
+
