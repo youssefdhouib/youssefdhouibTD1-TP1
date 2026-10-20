@@ -2,55 +2,15 @@
   <app-empty-state message="Aucune tâche." />
 } @else {
   <ul class="space-y-4">
+    <!-- track conserve l'identité de chaque tâche grâce à son id. -->
     @for (task of tasks(); track task.id) {
-      <!-- NgClass applique une couleur de bordure selon le statut. -->
-      <li class="border-l-4 pl-4"
-          appHighlight appOverdue
-          [dueDate]="task.dueDate" [done]="task.status === 'Terminé'"
-          #overdue="appOverdue"
-          [ngClass]="{
-            'border-amber-500': task.status === 'En attente' && !overdue.isOverdue,
-            'border-blue-500': task.status === 'En cours' && !overdue.isOverdue,
-            'border-emerald-500': task.status === 'Terminé'
-          }">
-        <p class="font-medium text-slate-900">{{ task.title }}</p>
-        @if (task.description) {
-          <!-- TruncatePipe limite les descriptions longues à 40 caractères. -->
-          <!-- L'infobulle affiche la description complète au survol. -->
-          <p class="mt-1 text-sm text-slate-500" [appTooltip]="task.description">
-            {{ task.description | truncate: 40 }}
-          </p>
-        }
-        <div class="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600">
-          <!-- Le bloc switch choisit le symbole selon la priorité. -->
-          @switch (task.priority) {
-            @case ('Haute') {
-              <span>Priorité : ▲ Haute</span>
-            }
-            @case ('Moyenne') {
-              <span>Priorité : ● Moyenne</span>
-            }
-            @default {
-              <span>Priorité : ▼ Basse</span>
-            }
-          }
-          <span>{{ task.status }}</span>
-          <!-- On vérifie la présence de dueDate avant d'utiliser DatePipe. -->
-          <!-- L'alias dueDate stocke la date si elle existe. -->
-          @if (task.dueDate; as dueDate) {
-            <span>
-              Échéance : {{ dueDate | date: 'dd/MM/yyyy' }}
-              · {{ dueDate | deadline }}
-            </span>
-          } @else {
-            <span>Aucune échéance</span>
-          }
-        </div>
-        @if (showAssignee()) {
-          <p class="mt-2 text-sm text-slate-500">
-            Assigné à : <span class="font-medium text-slate-700">{{ assigneeName(task.assigneeId) }}</span>
-          </p>
-        }
+      <li>
+        <!-- Le parent transmet les données à son composant enfant. -->
+        <app-task-item
+          [task]="task"
+          [showAssignee]="showAssignee()"
+          [assigneeName]="assigneeName(task.assigneeId)"
+        />
       </li>
     }
   </ul>

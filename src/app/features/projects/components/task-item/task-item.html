@@ -1,0 +1,58 @@
+<!-- Les tâches terminées ne sont jamais signalées en retard. -->
+<article class="rounded-lg border-l-4 p-4"
+         appHighlight appOverdue
+         [dueDate]="task().dueDate"
+         [done]="task().status === 'Terminé'"
+         #overdue="appOverdue"
+         [ngClass]="{
+           'border-amber-500': task().status === 'En attente' && !overdue.isOverdue,
+           'border-blue-500': task().status === 'En cours' && !overdue.isOverdue,
+           'border-emerald-500': task().status === 'Terminé',
+           'bg-white': !overdue.isOverdue
+         }">
+  <h3 class="font-medium text-slate-900">{{ task().title }}</h3>
+
+  <!-- Affiche la description seulement si elle existe et la limite à 40 caractères. -->
+  @if (task().description; as description) {
+    <p class="mt-1 text-sm text-slate-500" [appTooltip]="description">{{ description | truncate: 40 }}</p>
+  }
+
+  <div class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600">
+    <!-- La couleur et le symbole permettent de distinguer les priorités. -->
+    <span class="rounded-full px-2 py-1 text-xs font-semibold"
+          [ngClass]="{
+            'bg-red-100 text-red-800': task().priority === 'Haute',
+            'bg-amber-100 text-amber-900': task().priority === 'Moyenne',
+            'bg-slate-100 text-slate-700': task().priority === 'Basse'
+          }">
+      @switch (task().priority) {
+        @case ('Haute') { ▲ Haute }
+        @case ('Moyenne') { ● Moyenne }
+        @default { ▼ Basse }
+      }
+    </span>
+    <span class="rounded-full px-2 py-1 text-xs font-semibold"
+          [ngClass]="{
+            'bg-amber-100 text-amber-900': task().status === 'En attente',
+            'bg-blue-100 text-blue-900': task().status === 'En cours',
+            'bg-emerald-100 text-emerald-800': task().status === 'Terminé'
+          }">
+      {{ task().status }}
+    </span>
+  </div>
+
+  <!-- L'alias dueDate évite de répéter task().dueDate. -->
+  <p class="mt-2 text-sm text-slate-600">
+    @if (task().dueDate; as dueDate) {
+      Échéance : {{ dueDate | date: 'dd/MM/yyyy' }} · {{ dueDate | deadline }}
+    } @else {
+      Aucune échéance
+    }
+  </p>
+  <!-- Masqué dans la vue par utilisateur, où le nom serait redondant. -->
+  @if (showAssignee()) {
+    <p class="mt-2 text-sm text-slate-500">
+      Assigné à : <span class="font-medium text-slate-700">{{ assigneeName() }}</span>
+    </p>
+  }
+</article>

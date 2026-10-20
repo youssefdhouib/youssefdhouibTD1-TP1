@@ -1,20 +1,15 @@
-import { DatePipe, NgClass } from '@angular/common';
-import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
-import { OverdueDirective } from '../../../../shared/directives/overdue.directive';
-import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { UserService } from '../../../../core/services/user.service';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
-import { DeadlinePipe } from '../../../../shared/pipes/deadline-pipe';
-import { TruncatePipe } from '../../../../shared/pipes/truncate-pipe';
+import { TaskItem } from '../task-item/task-item';
 import type { User } from '../../../users/models/user.model';
 import type { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  // DatePipe est importé car TaskList est un composant standalone.
-  imports: [EmptyState, DatePipe, TruncatePipe, DeadlinePipe, NgClass, HighlightDirective, OverdueDirective, TooltipDirective],
+  // TaskList gère la liste ; TaskItem affiche chaque tâche.
+  imports: [EmptyState, TaskItem],
   templateUrl: './task-list.html',
 })
 export class TaskList implements OnInit {
