@@ -40,6 +40,12 @@
       {{ project().budget | currency: 'TND' : 'code' : '1.2-2' }}
     </p>
 
+    <!-- Le compteur se met à jour après chaque événement de changement de statut. -->
+    <p aria-live="polite">
+      <strong>Tâches terminées :</strong>
+      {{ completedTaskCount() }} / {{ project().tasks.length }}
+    </p>
+
     @if (project().tasks.length > 0) {
       <p>
         <strong>Avancement :</strong>
@@ -83,7 +89,8 @@
       Trois premières tâches sur {{ project().tasks.length }}
     </h4>
     <!-- SlicePipe limite la liste affichée aux trois premières tâches. -->
-    <app-task-list [tasks]="project().tasks | slice: 0 : 3" />
+    <app-task-list [tasks]="project().tasks | slice: 0 : 3"
+                   (taskStatusChange)="onTaskStatusChange($event)" />
   </div>
   <button type="button" (click)="selectProject()"
           [attr.aria-label]="'Sélectionner ' + project().name"

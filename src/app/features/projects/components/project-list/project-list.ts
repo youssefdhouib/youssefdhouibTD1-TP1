@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ProjectService } from '../../../../core/services/project.service';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import type { Project } from '../../models/project.model';
+import type { TaskStatus } from '../../models/task.model';
 import { ProjectStore } from '../../state/project.store';
 import { ProjectCard } from '../project-card/project-card';
 
@@ -37,12 +38,29 @@ export class ProjectList implements OnInit {
   ngOnInit(): void {
     // Subscribe explicitly as required by the TP, then update the store's signal.
     // of(PROJECTS) emits once and completes immediately.
-    this.projectService.getProjects().subscribe(projects => {
-      this.projects.set(projects);
-    });
+    if (!this.projectStore.projectsLoaded) {
+      this.projectService.getProjects().subscribe(projects => {
+        this.projects.set(projects);
+        this.projectStore.projectsLoaded = true;
+      });
+    }
   }
 
   // Receives the ProjectCard output event and records the selected project.
+  // Seul le parent modifie les données : nouveaux objets, sans mutation des entrées.
+  onTaskStatusChange(event: { projectId: number; taskId: number; status: TaskStatus }): void {
+    this.projects.update(projects => projects.map(project =>
+      project.id === event.projectId
+        ? {
+            ...project,
+            tasks: project.tasks.map(task => task.id === event.taskId
+              ? { ...task, status: event.status }
+              : task),
+          }
+        : project
+    ));
+  }
+
   onProjectSelected(project: Project): void {
     this.projectStore.selectProject(project);
     console.log(project);

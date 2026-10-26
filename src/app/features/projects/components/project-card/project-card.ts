@@ -10,6 +10,7 @@ import {
 } from '@angular/common';
 import { Component, computed, input, output } from '@angular/core';
 import type { Project } from '../../models/project.model';
+import type { TaskStatus } from '../../models/task.model';
 import { TaskList } from '../task-list/task-list';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
 
@@ -39,7 +40,19 @@ export class ProjectCard {
   // Output event: sends the selected Project object back to ProjectList.
   readonly projectSelected = output<Project>();
 
-  // Calcule la proportion des tâches terminées.
+  readonly taskStatusChange = output<{ projectId: number; taskId: number; status: TaskStatus }>();
+
+  // Transmet l'événement à ProjectList en précisant le projet concerné.
+  onTaskStatusChange(event: { taskId: number; status: TaskStatus }): void {
+    this.taskStatusChange.emit({ ...event, projectId: this.project().id });
+  }
+
+  // Recompte automatiquement les tâches terminées quand le projet change.
+  readonly completedTaskCount = computed(() =>
+    this.project().tasks.filter(task => task.status === 'Terminé').length
+  );
+
+  // Le taux dépend du compteur computed, lui-même dépendant du signal project.
   // La valeur 0 évite une division par zéro pour un projet sans tâche.
   readonly completionRate = computed(() => {
     const tasks = this.project().tasks;
@@ -47,8 +60,7 @@ export class ProjectCard {
       return 0;
     }
 
-    const completedTasks = tasks.filter(task => task.status === 'Terminé').length;
-    return completedTasks / tasks.length;
+    return this.completedTaskCount() / tasks.length;
   });
 
   // L'accesseur choisit la couleur de la barre à partir du pourcentage réel.

@@ -6,6 +6,7 @@
     </span>
   </header>
   <div class="p-4">
-    <app-task-list [tasks]="tasks()" [showAssignee]="false" />
+    <app-task-list [tasks]="tasks()" [showAssignee]="false"
+                   (taskStatusChange)="onTaskStatusChange($event)" />
   </div>
 </section>

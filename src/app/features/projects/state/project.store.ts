@@ -6,6 +6,8 @@ import type { Project } from '../models/project.model';
 export class ProjectStore {
   // Signals notify their consumers when set() or update() changes their value.
   readonly projects = signal<Project[]>([]);
+  // Évite de recharger les données initiales lors d'un changement de vue.
+  projectsLoaded = false;
   readonly selectedProject = signal<Project | null>(null);
 
   // Keep the selected project in shared state after a child emits its selection.

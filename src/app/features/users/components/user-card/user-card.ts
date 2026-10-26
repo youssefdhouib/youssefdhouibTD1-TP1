@@ -2,7 +2,7 @@ import { LowerCasePipe, NgClass, NgStyle, TitleCasePipe } from '@angular/common'
 import { Component, computed, input, output } from '@angular/core';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import type { Project } from '../../../projects/models/project.model';
-import type { Task } from '../../../projects/models/task.model';
+import type { Task, TaskStatus } from '../../../projects/models/task.model';
 import type { User } from '../../models/user.model';
 import { UserProjectGroup } from '../user-project-group/user-project-group';
 import { InitialsPipe } from '../../../../shared/pipes/initials-pipe';
@@ -21,6 +21,8 @@ export class UserCard {
   readonly user = input.required<User>();
   readonly projects = input.required<Project[]>();
   readonly userSelected = output<User>();
+  // Relaye l'événement ; seul le parent UserList met à jour les données.
+  readonly taskStatusChange = output<{ projectId: number; taskId: number; status: TaskStatus }>();
 
   // Chaque rôle possède sa couleur d'avatar ; le gris sert de valeur de secours.
   readonly roleColors: Record<string, string> = {

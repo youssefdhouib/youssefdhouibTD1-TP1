@@ -1,9 +1,9 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { UserService } from '../../../../core/services/user.service';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import { TaskItem } from '../task-item/task-item';
 import type { User } from '../../../users/models/user.model';
-import type { Task } from '../../models/task.model';
+import type { Task, TaskStatus } from '../../models/task.model';
 
 @Component({
   selector: 'app-task-list',
@@ -17,6 +17,8 @@ export class TaskList implements OnInit {
 
   readonly tasks = input.required<Task[]>();
   readonly showAssignee = input(true);
+  // Ajoute l'identifiant pour que le parent sache quelle tâche mettre à jour.
+  readonly taskStatusChange = output<{ taskId: number; status: TaskStatus }>();
   private readonly users = signal<User[]>([]);
 
   ngOnInit(): void {

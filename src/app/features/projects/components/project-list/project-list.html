@@ -24,7 +24,8 @@
   </div>
   <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
     @for (project of filteredProjects(); track project.id) {
-      <app-project-card [project]="project" (projectSelected)="onProjectSelected($event)" />
+      <app-project-card [project]="project" (projectSelected)="onProjectSelected($event)"
+                        (taskStatusChange)="onTaskStatusChange($event)" />
     } @empty {
       <app-empty-state message="Aucun projet ne correspond à votre recherche." />
     }

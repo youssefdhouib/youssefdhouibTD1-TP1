@@ -11,7 +11,8 @@ import { ProjectService } from '../../../../core/services/project.service';
 import { UserService } from '../../../../core/services/user.service';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 
-import type { Project } from '../../../projects/models/project.model';
+import type { TaskStatus } from '../../../projects/models/task.model';
+import { ProjectStore } from '../../../projects/state/project.store';
 import type { User } from '../../models/user.model';
 import { UserCard } from '../user-card/user-card';
 
@@ -25,9 +26,11 @@ import { UserCard } from '../user-card/user-card';
 export class UserList implements OnInit {
   private readonly userService = inject(UserService);
   private readonly projectService = inject(ProjectService);
+  private readonly projectStore = inject(ProjectStore);
 
   readonly users = signal<User[]>([]);
-  readonly projects = signal<Project[]>([]);
+  // Les deux vues partagent le même signal pour conserver leurs modifications.
+  readonly projects = this.projectStore.projects;
   readonly searchTerm = signal('');
   readonly selectedUser = signal<User | null>(null);
 
@@ -46,9 +49,26 @@ export class UserList implements OnInit {
       this.users.set(users);
     });
 
-    this.projectService.getProjects().subscribe((projects) => {
-      this.projects.set(projects);
-    });
+    if (!this.projectStore.projectsLoaded) {
+      this.projectService.getProjects().subscribe((projects) => {
+        this.projects.set(projects);
+        this.projectStore.projectsLoaded = true;
+      });
+    }
+  }
+
+  // Mise à jour immuable du projet et de la tâche, comme dans ProjectList.
+  onTaskStatusChange(event: { projectId: number; taskId: number; status: TaskStatus }): void {
+    this.projects.update(projects => projects.map(project =>
+      project.id === event.projectId
+        ? {
+            ...project,
+            tasks: project.tasks.map(task => task.id === event.taskId
+              ? { ...task, status: event.status }
+              : task),
+          }
+        : project
+    ));
   }
 
   onSearchTermChange(value: string): void {

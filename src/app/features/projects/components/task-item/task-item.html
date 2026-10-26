@@ -42,7 +42,9 @@
   </div>
 
   <!-- L'alias dueDate évite de répéter task().dueDate. -->
-  <p class="mt-2 text-sm text-slate-600">
+  <!-- NgStyle souligne l'échéance en rouge si la tâche reste en retard. -->
+  <p class="mt-2 text-sm text-slate-600"
+     [ngStyle]="{ color: overdue.isOverdue ? '#b91c1c' : '#475569' }">
     @if (task().dueDate; as dueDate) {
       Échéance : {{ dueDate | date: 'dd/MM/yyyy' }} · {{ dueDate | deadline }}
     } @else {
@@ -55,4 +57,9 @@
       Assigné à : <span class="font-medium text-slate-700">{{ assigneeName() }}</span>
     </p>
   }
+  <!-- Le clic émet un événement vers TaskList. -->
+  <button type="button" (click)="changeStatus()"
+          class="mt-3 rounded-lg bg-blue-700 px-3 py-2 text-sm text-white hover:bg-blue-800">
+    Changer le statut
+  </button>
 </article>
