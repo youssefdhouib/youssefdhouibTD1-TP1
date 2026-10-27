@@ -1,9 +1,18 @@
-@if (tasks().length === 0) {
-  <app-empty-state message="Aucune tâche." />
+<label class="mb-4 block text-sm font-medium text-slate-700">
+  Filtrer les tâches
+  <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
+          class="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2">
+    <option value="Toutes">Toutes les tâches</option>
+    <option value="En cours">En cours</option>
+    <option value="Terminé">Terminées</option>
+  </select>
+</label>
+@if (filteredTasks().length === 0) {
+  <app-empty-state [message]="tasks().length === 0 ? 'Aucune tâche.' : 'Aucune tâche ne correspond au filtre.'" />
 } @else {
   <ul class="space-y-4">
     <!-- track conserve l'identité de chaque tâche grâce à son id. -->
-    @for (task of tasks(); track task.id) {
+    @for (task of filteredTasks(); track task.id) {
       <li>
         <!-- Le parent transmet les données à son composant enfant. -->
         <app-task-item
@@ -11,6 +20,7 @@
           [showAssignee]="showAssignee()"
           [assigneeName]="assigneeName(task.assigneeId)"
           (taskStatusChange)="taskStatusChange.emit({ taskId: task.id, status: $event })"
+          (taskDelete)="taskDelete.emit(task.id)"
         />
       </li>
     }

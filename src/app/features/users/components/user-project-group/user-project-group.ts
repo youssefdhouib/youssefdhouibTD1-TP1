@@ -13,6 +13,7 @@ import type { Task, TaskStatus } from '../../../projects/models/task.model';
 export class UserProjectGroup {
   readonly project = input.required<Project>();
   readonly tasks = input.required<Task[]>();
+  readonly taskDelete = output<{ projectId: number; taskId: number }>();
   readonly taskStatusChange = output<{ projectId: number; taskId: number; status: TaskStatus }>();
 
   // Identifie le projet avant de remonter l'événement vers UserCard.

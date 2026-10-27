@@ -1,4 +1,5 @@
 import { DatePipe, NgClass, NgStyle } from '@angular/common';
+import { TaskStatusBadge } from '../../../../shared/components/task-status-badge/task-status-badge';
 import { Component, input, output } from '@angular/core';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
 import { OverdueDirective } from '../../../../shared/directives/overdue.directive';
@@ -11,7 +12,7 @@ import type { Task, TaskStatus } from '../../models/task.model';
   selector: 'app-task-item',
   standalone: true,
   // Réutilise les pipes du TP3 pour la date et la description.
-  imports: [DatePipe, DeadlinePipe, TruncatePipe, NgClass, NgStyle, HighlightDirective, OverdueDirective, TooltipDirective],
+  imports: [DatePipe, DeadlinePipe, TruncatePipe, NgClass, NgStyle, HighlightDirective, OverdueDirective, TooltipDirective, TaskStatusBadge],
   templateUrl: './task-item.html',
   styleUrl: './task-item.css',
 })
@@ -24,6 +25,8 @@ export class TaskItem {
 
   // L'enfant annonce le nouveau statut sans modifier son entrée task.
   readonly taskStatusChange = output<TaskStatus>();
+  // Le parent reçoit la demande ; l'enfant ne supprime pas lui-même la tâche.
+  readonly taskDelete = output<void>();
 
   changeStatus(): void {
     let nextStatus: TaskStatus;

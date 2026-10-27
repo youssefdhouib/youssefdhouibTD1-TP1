@@ -5,7 +5,6 @@ import {
   KeyValuePipe,
   NgStyle,
   PercentPipe,
-  SlicePipe,
   UpperCasePipe,
 } from '@angular/common';
 import { Component, computed, input, output } from '@angular/core';
@@ -26,7 +25,6 @@ import { HighlightDirective } from '../../../../shared/directives/highlight.dire
     CurrencyPipe,
     PercentPipe,
     DecimalPipe,
-    SlicePipe,
     KeyValuePipe,
     NgStyle,
     HighlightDirective,
@@ -39,6 +37,7 @@ export class ProjectCard {
   readonly project = input.required<Project>();
   // Output event: sends the selected Project object back to ProjectList.
   readonly projectSelected = output<Project>();
+  readonly taskDelete = output<{ projectId: number; taskId: number }>();
 
   readonly taskStatusChange = output<{ projectId: number; taskId: number; status: TaskStatus }>();
 

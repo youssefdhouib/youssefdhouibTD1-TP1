@@ -21,6 +21,7 @@ export class UserCard {
   readonly user = input.required<User>();
   readonly projects = input.required<Project[]>();
   readonly userSelected = output<User>();
+  readonly taskDelete = output<{ projectId: number; taskId: number }>();
   // Relaye l'événement ; seul le parent UserList met à jour les données.
   readonly taskStatusChange = output<{ projectId: number; taskId: number; status: TaskStatus }>();
 

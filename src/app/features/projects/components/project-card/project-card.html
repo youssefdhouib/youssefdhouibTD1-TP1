@@ -86,10 +86,11 @@
 
   <div class="my-6 flex-1">
     <h4 class="mb-4 text-sm font-semibold text-slate-900">
-      Trois premières tâches sur {{ project().tasks.length }}
+      Tâches ({{ project().tasks.length }})
     </h4>
-    <!-- SlicePipe limite la liste affichée aux trois premières tâches. -->
-    <app-task-list [tasks]="project().tasks | slice: 0 : 3"
+    <!-- Le filtre doit pouvoir accéder à toutes les tâches du projet. -->
+    <app-task-list [tasks]="project().tasks"
+                   (taskDelete)="taskDelete.emit({ projectId: project().id, taskId: $event })"
                    (taskStatusChange)="onTaskStatusChange($event)" />
   </div>
   <button type="button" (click)="selectProject()"

@@ -75,6 +75,15 @@ export class UserList implements OnInit {
     this.searchTerm.set(value);
   }
 
+  // La suppression met aussi à jour les compteurs et l'autre vue via le store partagé.
+  onTaskDelete(event: { projectId: number; taskId: number }): void {
+    this.projects.update(projects => projects.map(project =>
+      project.id === event.projectId
+        ? { ...project, tasks: project.tasks.filter(task => task.id !== event.taskId) }
+        : project
+    ));
+  }
+
   onUserSelected(user: User): void {
     this.selectedUser.set(user);
     console.log('Utilisateur sélectionné :', user);

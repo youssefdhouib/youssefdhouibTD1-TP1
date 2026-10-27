@@ -65,4 +65,13 @@ export class ProjectList implements OnInit {
     this.projectStore.selectProject(project);
     console.log(project);
   }
+
+  // Retire la tâche du projet concerné en créant un nouveau tableau.
+  onTaskDelete(event: { projectId: number; taskId: number }): void {
+    this.projects.update(projects => projects.map(project =>
+      project.id === event.projectId
+        ? { ...project, tasks: project.tasks.filter(task => task.id !== event.taskId) }
+        : project
+    ));
+  }
 }

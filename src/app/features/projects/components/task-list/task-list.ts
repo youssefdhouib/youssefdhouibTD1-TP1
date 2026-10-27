@@ -1,4 +1,5 @@
-import { Component, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../../core/services/user.service';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import { TaskItem } from '../task-item/task-item';
@@ -9,7 +10,7 @@ import type { Task, TaskStatus } from '../../models/task.model';
   selector: 'app-task-list',
   standalone: true,
   // TaskList gère la liste ; TaskItem affiche chaque tâche.
-  imports: [EmptyState, TaskItem],
+  imports: [EmptyState, TaskItem, FormsModule],
   templateUrl: './task-list.html',
 })
 export class TaskList implements OnInit {
@@ -17,6 +18,12 @@ export class TaskList implements OnInit {
 
   readonly tasks = input.required<Task[]>();
   readonly showAssignee = input(true);
+  readonly taskDelete = output<number>();
+  readonly statusFilter = signal<'Toutes' | 'En cours' | 'Terminé'>('Toutes');
+  // Filtre sans modifier la liste fournie par le parent.
+  readonly filteredTasks = computed(() => this.tasks().filter(task =>
+    this.statusFilter() === 'Toutes' || task.status === this.statusFilter()
+  ));
   // Ajoute l'identifiant pour que le parent sache quelle tâche mettre à jour.
   readonly taskStatusChange = output<{ taskId: number; status: TaskStatus }>();
   private readonly users = signal<User[]>([]);
