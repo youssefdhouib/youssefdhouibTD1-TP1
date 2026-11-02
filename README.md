@@ -1,5 +1,32 @@
 # Taskflow
 
+## TP5 — Injection de dépendances et HTTP
+
+Lancer deux terminaux à la racine du projet :
+
+```bash
+# Terminal 1 : API locale (json-server 0.17.4, compatible avec --watch)
+npm run api
+
+# Terminal 2 : application Angular
+npm start
+```
+
+Application : http://localhost:4200/ — API : http://localhost:3000/projects
+et http://localhost:3000/users/1.
+
+Dans la console du navigateur, comparer les identifiants ProjectService affichés
+par ProjectList et UserList : ils doivent être identiques. Le constructeur de chaque
+service ne s'exécute qu'une fois par démarrage de l'application.
+
+Les données initiales sont dans db.json. Supprimer un projet effectue une requête
+DELETE et enregistre la suppression dans ce fichier. Les changements de statut et
+les suppressions de tâches du TP4 restent en mémoire et se réinitialisent après
+un rechargement complet de la page.
+
+Pour tester les erreurs, arrêter l'API avant de charger la page, puis la relancer
+et cliquer sur Réessayer.
+
 Projet de TP Angular et Tailwind CSS réalisé par **Youssef Dhouib**.
 
 ## Version 1 — Pipes

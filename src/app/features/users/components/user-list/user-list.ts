@@ -27,6 +27,8 @@ export class UserList implements OnInit {
   private readonly userService = inject(UserService);
   private readonly projectService = inject(ProjectService);
   private readonly projectStore = inject(ProjectStore);
+  readonly loading = computed(() => this.projectService.loading() || this.userService.loading());
+  readonly error = computed(() => this.projectService.error() || this.userService.error());
 
   readonly users = signal<User[]>([]);
   // Les deux vues partagent le même signal pour conserver leurs modifications.
@@ -45,16 +47,16 @@ export class UserList implements OnInit {
   });
 
   ngOnInit(): void {
+    console.log('[UserList] ProjectService id :', this.projectService.id);
+    this.loadData();
+  }
+
+  loadData(): void {
     this.userService.getUsers().subscribe((users) => {
       this.users.set(users);
     });
 
-    if (!this.projectStore.projectsLoaded) {
-      this.projectService.getProjects().subscribe((projects) => {
-        this.projects.set(projects);
-        this.projectStore.projectsLoaded = true;
-      });
-    }
+    this.projectService.getProjects().subscribe();
   }
 
   // Mise à jour immuable du projet et de la tâche, comme dans ProjectList.

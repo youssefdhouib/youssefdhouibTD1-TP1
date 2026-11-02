@@ -1,4 +1,13 @@
 <section aria-labelledby="users-heading">
+  @if (loading()) {
+    <p role="status" class="mb-4 text-blue-700">Chargement des données...</p>
+  }
+  @if (error(); as message) {
+    <div role="alert" class="mb-4 rounded-lg bg-red-50 p-4 text-red-800">
+      {{ message }}
+      <button type="button" (click)="loadData()" class="ml-2 underline">Réessayer</button>
+    </div>
+  }
   <div class="mb-6 flex flex-wrap items-baseline justify-between gap-2">
     <h2 id="users-heading" class="text-2xl font-semibold text-slate-900">Utilisateurs</h2>
     <p class="text-sm text-slate-600">{{ filteredUsers().length }} / {{ users().length }} utilisateurs</p>
@@ -38,7 +47,7 @@
         />  
       }
     </div>
-  } @else {
+  } @else if (!loading() && !error()) {
     <app-empty-state message="Aucun utilisateur ne correspond à votre recherche." />
   }
 </section>

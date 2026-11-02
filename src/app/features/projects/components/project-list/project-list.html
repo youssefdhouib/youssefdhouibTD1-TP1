@@ -1,4 +1,13 @@
 <section aria-labelledby="projects-heading">
+  @if (loading()) {
+    <p role="status" class="mb-4 text-blue-700">Chargement des projets...</p>
+  }
+  @if (error(); as message) {
+    <div role="alert" class="mb-4 rounded-lg bg-red-50 p-4 text-red-800">
+      {{ message }}
+      <button type="button" (click)="loadProjects()" class="ml-2 underline">Réessayer</button>
+    </div>
+  }
   <div class="mb-6 flex flex-wrap items-baseline justify-between gap-2">
     <h2 id="projects-heading" class="text-2xl font-semibold text-slate-900">Mes projets</h2>
     <p class="text-sm text-slate-600">{{ filteredProjects().length }} / {{ projects().length }} projets</p>
@@ -24,11 +33,21 @@
   </div>
   <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
     @for (project of filteredProjects(); track project.id) {
+      <div class="flex flex-col gap-2">
       <app-project-card [project]="project" (projectSelected)="onProjectSelected($event)"
                         (taskStatusChange)="onTaskStatusChange($event)"
                         (taskDelete)="onTaskDelete($event)" />
+      <!-- TP5 : la suppression HTTP modifie le signal partagé du service. -->
+      <button type="button" (click)="deleteProject(project.id)" [disabled]="loading()"
+              [attr.aria-label]="'Supprimer le projet ' + project.name"
+              class="rounded-lg bg-red-700 px-4 py-2 text-sm text-white disabled:opacity-50">
+        Supprimer le projet
+      </button>
+      </div>
     } @empty {
-      <app-empty-state message="Aucun projet ne correspond à votre recherche." />
+      @if (!loading() && !error()) {
+        <app-empty-state message="Aucun projet ne correspond à votre recherche." />
+      }
     }
   </div>
 </section>

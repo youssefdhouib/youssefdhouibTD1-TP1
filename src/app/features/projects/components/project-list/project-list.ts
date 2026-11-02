@@ -18,6 +18,8 @@ export class ProjectList implements OnInit {
   // The service supplies data; the store holds shared application state.
   private readonly projectService = inject(ProjectService);
   private readonly projectStore = inject(ProjectStore);
+  readonly loading = this.projectService.loading;
+  readonly error = this.projectService.error;
 
   // ngModel reads and updates this signal when the user types.
   readonly searchTerm = signal('');
@@ -36,14 +38,17 @@ export class ProjectList implements OnInit {
   });
 
   ngOnInit(): void {
-    // Subscribe explicitly as required by the TP, then update the store's signal.
-    // of(PROJECTS) emits once and completes immediately.
-    if (!this.projectStore.projectsLoaded) {
-      this.projectService.getProjects().subscribe(projects => {
-        this.projects.set(projects);
-        this.projectStore.projectsLoaded = true;
-      });
-    }
+    console.log('[ProjectList] ProjectService id :', this.projectService.id);
+    this.loadProjects();
+  }
+
+  loadProjects(): void {
+    // Le service HTTP remplit le signal partagé ; le composant déclenche la requête.
+    this.projectService.getProjects().subscribe();
+  }
+
+  deleteProject(id: number): void {
+    this.projectService.deleteProject(id).subscribe();
   }
 
   // Receives the ProjectCard output event and records the selected project.
