@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { FavoritesService } from './core/services/favorites.service';
 import { ProjectList } from './features/projects/components/project-list/project-list';
 import { UserList } from './features/users/components/user-list/user-list';
 import { ViewMode, ViewToggle } from './shared/components/view-toggle/view-toggle';
@@ -13,6 +14,7 @@ import { ColorDirective } from './shared/directives/color.directive';
   templateUrl: './app.html',
 })
 export class App {
+  readonly favoritesService = inject(FavoritesService);
   readonly activeView = signal<ViewMode>('tasks');
 }
 

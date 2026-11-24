@@ -4,6 +4,15 @@
     <h3 class="text-xl font-semibold text-slate-900">
       {{ project().name | uppercase }}
     </h3>
+    <!-- Le même service singleton alimente l'étoile et le compteur de l'en-tête. -->
+    <button type="button" (click)="favoritesService.toggle(project().id)"
+            [attr.aria-pressed]="favoritesService.isFavorite(project().id)"
+            [attr.aria-label]="(favoritesService.isFavorite(project().id) ? 'Retirer des favoris : ' : 'Ajouter aux favoris : ') + project().name"
+            [class.text-amber-600]="favoritesService.isFavorite(project().id)"
+            [class.text-slate-500]="!favoritesService.isFavorite(project().id)"
+            class="rounded-lg px-3 py-1 text-2xl focus-visible:outline-2 focus-visible:outline-blue-700">
+      {{ favoritesService.isFavorite(project().id) ? '★' : '☆' }}
+    </button>
     <span class="rounded-full px-3 py-1 text-xs font-semibold"
           [class.bg-amber-100]="project().status === 'En attente'"
           [class.text-amber-900]="project().status === 'En attente'"

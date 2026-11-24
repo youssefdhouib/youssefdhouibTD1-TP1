@@ -7,7 +7,8 @@ import {
   PercentPipe,
   UpperCasePipe,
 } from '@angular/common';
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
+import { FavoritesService } from '../../../../core/services/favorites.service';
 import type { Project } from '../../models/project.model';
 import type { TaskStatus } from '../../models/task.model';
 import { TaskList } from '../task-list/task-list';
@@ -33,6 +34,7 @@ import { HighlightDirective } from '../../../../shared/directives/highlight.dire
   host: { class: 'block h-full' },
 })
 export class ProjectCard {
+  readonly favoritesService = inject(FavoritesService);
   // Required input: ProjectList passes one project with [project].
   readonly project = input.required<Project>();
   // Output event: sends the selected Project object back to ProjectList.
